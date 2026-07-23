@@ -20,3 +20,8 @@ Una distribución uniforme de la aleatorieidad implica que haya la misma probabi
 
 Distribución normal.
 
+![alt text](<Imagenes/distribución normal.png>)
+
+![alt text](Imagenes/codi.png)
+
+me ayudé de la Ia para generar el código pero desarrollé la idea, quería representarlo como un anillo rgb alrededor donde se haga click con el mouse
