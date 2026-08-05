@@ -61,3 +61,23 @@ entonces decidí hacerlo de esta manera, al principío las líneas generadas no 
 
 http://127.0.0.1:5500/sim2026-20-Test%20Miguel%20Escobar/
 
+Emcargo Completo: 5
+
+Simulación con intención: 5
+
+siento que me enfoque en el aspecto de diseño más que en la ejecución, logrando utilizar conceptos como distribución normal, y levy flight, y dando sentido a la aleatorieidad.
+
+Interacción signigicativa: 5 
+
+Prototipo funcional: 5
+
+Proceso documentado: 5
+
+
+
+--
+
+Bitácora Unidad 2
+
+## Actividad 1
+
