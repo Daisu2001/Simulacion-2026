@@ -1,5 +1,8 @@
 # Simulacion-2026
 
+Bitácora Unidad 1
+
+
 ## Actividad 1
 
 Vi los videos propuestos en la unidad como referentes, y me sirvieron para entender hasta donde puede llegar el arte generativo, me sirvió   como inspiración.
@@ -11,6 +14,7 @@ Vi los videos propuestos en la unidad como referentes, y me sirvieron para enten
 Analizamos el ejemplo del random walk, lo pude ejecutar y verlo funcionando en línea y local.
 
 ## Actividad 3
+
 
 Analizamos las distribuciónes de probabilidad, vimos el ejemplo de una distribución gaussiana.
 
@@ -69,7 +73,6 @@ En un inicio le pedí ayuda a la IA para la generación del sistema y la interfa
 " hola, estoy trabajando en arte generativo con jsp5, estoy trabajando puntualmente particle live, basándome principalmente en el trabajo de Max Cooper y Tom Mhor, necesito que me generes el código necesario para un sistema de particulas de diferentes colores, sus interacciones en la matriz son determinadas por su cercanía y las reglas que condicione yo en el sistema.
 
 
-
 osea, algo como lo de la imagen, pero que la interfaz solo conserve sliders para el número de particulas y el trail, y en vez de las otras cosas tenga la matriz de 5*5 con casillas interactuables por el usuario "
 
 Esto con un screenshot de la pagina clusters.  
@@ -104,7 +107,6 @@ Los parametros variables son los sliders de la interfaz y los cuadros de la matr
 
 
 
-
 Inicialmente el programa se veía como el de cluster, pues le pedí a la IA que me ayudara a generar algo similar, sin embargo rapidamente aplique los cambios empecé a obtener comportamientos distintos, con las reglas anteriormente mencionadas obtuve algo así.
 
 
@@ -135,3 +137,25 @@ entre ellas.
 
 
 y finalmente obtuve lo que buscaba, al final imita el comportamiento de poblaciones con un virus por ejemplo, al final quedan todos los casos aislados, la comunidad restante alejandose de ellos constantemente.
+
+
+Emcargo Completo: 5
+
+Simulación con intención: 5
+
+siento que me enfoque en el aspecto de diseño más que en la ejecución, logrando utilizar conceptos como distribución normal, y levy flight, y dando sentido a la aleatorieidad.
+
+Interacción signigicativa: 5 
+
+Prototipo funcional: 5
+
+Proceso documentado: 5
+
+
+--
+
+Bitácora Unidad 2
+
+## Actividad 1
+
+```
