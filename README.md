@@ -56,3 +56,82 @@ entonces decidí hacerlo de esta manera, al principío las líneas generadas no 
 
 
 http://127.0.0.1:5500/sim2026-20-Test%20Miguel%20Escobar/
+
+
+
+# Unidad 2
+
+En esta unidad, tras haber estudiado los referentes de arte generativo y particle life, tengo un mejor entendimiento de lo que pasa detrás de las obras de arte que hemos analizado, y sirvió como inspiración, no de un fin específico, sino de la experimentación con las fuerzas y vectores para llegar a cosas nuevas.
+
+
+En un inicio le pedí ayuda a la IA para la generación del sistema y la interfaz de usuario con el siguiente prompt:
+
+" hola, estoy trabajando en arte generativo con jsp5, estoy trabajando puntualmente particle live, basándome principalmente en el trabajo de Max Cooper y Tom Mhor, necesito que me generes el código necesario para un sistema de particulas de diferentes colores, sus interacciones en la matriz son determinadas por su cercanía y las reglas que condicione yo en el sistema.
+
+
+
+osea, algo como lo de la imagen, pero que la interfaz solo conserve sliders para el número de particulas y el trail, y en vez de las otras cosas tenga la matriz de 5*5 con casillas interactuables por el usuario "
+
+Esto con un screenshot de la pagina clusters.  
+
+Ya con el sistema en mano me puse manos a la obra para mejorarlo, lo primero que hice fue arreglar la interfaz, ya que inicialmente lucía así.
+
+
+![alt text](Imagenes/inter.png)
+
+Decidí hacerla más atractiva y añadir un slider para la velocidad
+
+![alt text](Imagenes/inter2.png)
+
+
+A continuación viene lo complejo, decidí que para la actividad, quería explorar la tensión entre la enfermedad y la cercanía, por lo que decidí ajustar el sistema de la siguiente manera:
+
+5 especies de partículas, 1, la verde siendo foco de infección, además introduje la regla de que si alguna particula pasa 5 segundos cerca de una partícula verde se convertirá en verde.
+
+La cantidad de particulas es graduable, pero se configuró para que las verdes representen un 2% del total de partículas.
+
+Estamos trabajando con una matriz mixta, con valores entre -1 y 1, los negativos siendo la repulsión y los positivos la atraccción, pues las 2 cosas deben ser posibles para ejecutar mi idea, los enfermos buscan ayuda en las poblaciones y las poblaciones tratan de eludirlos.
+
+La velocidad máxima está parametrizada de manera variable, pero la fricción base es de 0.82.
+
+
+La generación inicial es aleatoria excepto con la cantidad de partículas verdes, que representa un 2% como uno o dos pacientes de un virus
+
+
+En cuanto a las constantes tenemos 5 como numero de especies, tenemos el radio maximo de interaccion 110, un area de contagio de 35, los 5 segundos requeridos para la infección y un límite de fuerza máximo aplicable por fotograma.
+
+Los parametros variables son los sliders de la interfaz y los cuadros de la matriz.
+
+
+
+
+Inicialmente el programa se veía como el de cluster, pues le pedí a la IA que me ayudara a generar algo similar, sin embargo rapidamente aplique los cambios empecé a obtener comportamientos distintos, con las reglas anteriormente mencionadas obtuve algo así.
+
+
+![alt text](Imagenes/granja.png)
+
+
+
+con los grupos de partículas eventualmente volviéndose verdes, sin embargo no es lo que quería, todavía deseo hacer un diseño más orgánico, entonces lo que nos restaba era jugar con las fuerzas de interacción, lo que quice definir en un principio es, las poblaciones no se atraen entre ellas, exceptuando las verdes, que se ven atraidas a cualquier población.
+
+![alt text](Imagenes/inter2.png)
+
+
+con esto me acerqué a lo que quería, y obtuve un comportamiento interesante, más cercano a la manera en que se esparce una idea, a la que se esparce un virus, por la naturaleza estática de las partículas. se hacen cumulos y los cumulos cerca de los verdes, lentamente empiezan a ser absorviddos por los cumulos verdes, hasta que no hay ninguna partícula lo suficientemente cerca.
+
+
+![alt text](Imagenes/virus1.png)
+
+
+Luego de jugar un poco con las fuerzas, cambiando fundamentalmente laas relacionadas con las verdes obtuve lo que quería.
+![alt text](Imagenes/god.png)
+
+
+sin embargo no me parecía lo suficientemente interesante o representativo de la idea, por lo que decidí añadir otra regla, despues de que se supera una cantidad de partículas verdes en el sistema, las restantes empiezan a experimentar atracción 
+entre ellas.
+
+
+![alt text](Imagenes/virusss.png)
+
+
+y finalmente obtuve lo que buscaba, al final imita el comportamiento de poblaciones con un virus por ejemplo, al final quedan todos los casos aislados, la comunidad restante alejandose de ellos constantemente.
