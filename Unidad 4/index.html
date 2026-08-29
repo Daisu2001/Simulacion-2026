@@ -1,11 +1,59 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Departamento de Ritmos</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
   </head>
   <body>
+    <main id="app">
+      <header class="masthead">
+        <p class="eyebrow">DEPARTAMENTO DE COORDINACIÓN RÍTMICA</p>
+        <h1>Trámites en fase</h1>
+        <p class="subtitle">Un sistema administrativo gobernado por osciladores acoplados.</p>
+      </header>
+
+      <section class="workspace" aria-label="Sistema de agentes">
+        <div id="canvas-holder"></div>
+        <aside class="control-panel">
+          <div class="state-card">
+            <p class="eyebrow">ESTADO COLECTIVO</p>
+            <strong id="state-name">desorden</strong>
+            <div class="order-track"><span id="order-fill"></span></div>
+            <output id="order-value">r = 0.00</output>
+          </div>
+
+          <label class="control">
+            <span>Acoplamiento institucional <b>K</b></span>
+            <input id="coupling" type="range" min="0" max="8" step="0.05" value="1.6" />
+            <output id="coupling-value">1.60</output>
+          </label>
+
+          <label class="control">
+            <span>Variedad de ritmos <b>ω</b></span>
+            <input id="spread" type="range" min="0.15" max="2.4" step="0.05" value="1" />
+            <output id="spread-value">1.00×</output>
+          </label>
+
+          <div class="actions">
+            <button id="perturb" type="button">Nueva normativa</button>
+            <button id="advance" type="button" disabled>Adelantar seleccionado</button>
+          </div>
+
+          <p class="help">Haz clic en un objeto para seleccionarlo. Arrástralo horizontalmente para alterar su fase. “Nueva normativa” desordena una parte del sistema.</p>
+        </aside>
+      </section>
+
+      <section class="legend" aria-label="Clave del sistema">
+        <p><b>θᵢ</b> posición dentro del trámite</p>
+        <p><b>ωᵢ</b> ritmo natural de cada objeto</p>
+        <p><b>K</b> fuerza con que las oficinas se coordinan</p>
+      </section>
+    </main>
+    <div id="audio-notice" class="visible">Haz clic en cualquier objeto para activar el audio.</div>
     <script src="sketch.js"></script>
   </body>
 </html>
