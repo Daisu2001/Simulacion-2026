@@ -152,5 +152,45 @@ entre ellas.
 y finalmente obtuve lo que buscaba, al final imita el comportamiento de poblaciones con un virus por ejemplo, al final quedan todos los casos aislados, la comunidad restante alejandose de ellos constantemente.
 
 
-# Unidad 3#
+Encargo Completo: 4
 
+Simulación con intención: 5
+
+Interacción signigicativa: 5 
+
+Prototipo funcional: 5
+
+Proceso documentado: 5
+
+# Unidad 3
+
+
+# Unidad 4
+
+
+Para la unidad 4, tras haber visto los referentes, lo más importante para mi fue entender bien el modelo, y como interactúa con los agentes que creo de manera ritmica o visual, pasé un tiempo entendiento esto para empezar a diseñar mi proyecto, supe, viendo incredibox, que quería hacer algo rítmico, por lo que generé mi prompt:
+
+Por favor genera, utilizando esta base que tengo de jsp5, con mi sketch, index y style, un producto audiovisual que tenga como motor central el modelo de kuramoto con la temática de oficina, en el que haya 8 agentes totales, con las siguientes 4 identidades: Grapadora, Folder, Sello y Turno. quiero que cada una tenga un movimiento acorde con su identidad, y yo me encargaré de asignarles sonidos, pero crea el codigo para ello, yo conseguiré los archivos.  Se debe poder visualizar el estado del sistema, ya sea orden parcial, desorden u orden. y quiero poder manipular el acople institucional, la variedad de ritmos, adelantar agentes y desordenar el sistema con un botón.
+
+tengo guardadas las versiones anteriores en mi codex, que no quise incluir en el repositorio por temas de orden, si es necesario lo incluiré.
+
+Sin embargo los cambios fueron los siguientes entre la primera versión y el final:  
+
+Decidí añadir uno metrónomo con sonido de tacones de fondo, para contrastar el ritmo orgánico con un ritmo fijo, además hice más visible la fase de cada objeto, así como sus conexiones, también aceleré el omega de los items para poder ver variaciones de ritmo más interesantes, y que el sistema se organice más lentamente.
+
+También añadí la posibilidad de detener un objeto durante la ejecución del sistema.
+
+Finalmente obtuvimos esto:
+
+![alt text](Imagenes/oficina.png)
+
+Encargo Completo: 5
+
+Simulación con intención: 5
+
+
+Interacción signigicativa: 5 
+
+Prototipo funcional: 5
+
+Proceso documentado: 5
