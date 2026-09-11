@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevo Generacional - Presentación Three.js</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Three.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Canvas Three.js Dodecaedro -->
+  <canvas id="webgl"></canvas>
+
+  <!-- Capa de diapositivas -->
+  <main id="app">
+    
+    <section class="slide active">
+      <div class="content">
+        <h1>RELEVO GENERACIONAL:<br><span>LA VENTAJA QUE NADIE ESTÁ APROVECHANDO</span></h1>
+        <p class="tag">@centrodeeventosupb</p>
+      </div>
+    </section>
+
+    <!-- Slide 2 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 1.jpg');">
+      <div class="content">
+        <h2>¿un gran auditorio solo para hacer grados?</h2>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>Los eventos no llegaron a la Universidad.</h2>
+        <p class="highlight">La Universidad decidió encontrarse con el mundo.</p>
+      </div>
+    </section>
+
+    <!-- Slide 4 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 2.jpeg');">
+      <div class="content">
+        <h2>Academia + Industria + Ciudad</h2>
+      </div>
+    </section>
+
+    <!-- Slide 5 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 3.jpg');">
+      <div class="content">
+        <h2>Los eventos nunca fueron el objetivo.</h2>
+        <p class="highlight">El impacto sí.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>Un evento trae personas.</h2>
+        <p class="highlight">Una comunidad trae transformación.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>El talento crece a la velocidad de la confianza.</h2>
+      </div>
+    </section>
+
+    <!-- Slide 8 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 4.jpg');">
+      <div class="content">
+        <h2>La experiencia construye el camino.</h2>
+        <p class="highlight">Las nuevas generaciones descubren nuevas rutas.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>Una visión.</h2>
+        <p class="highlight">Dos generaciones.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>El crecimiento no ocurre cuando una generación reemplaza a otra.</h2>
+        <p class="highlight">Ocurre cuando trabajan juntas.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="content">
+        <h2>Los jóvenes no son el futuro.</h2>
+        <p class="highlight">Son el presente que muchas organizaciones aún no ven.</p>
+      </div>
+    </section>
+
+    <!-- Slide 12 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 5.jpeg');">
+      <div class="content">
+        <h2>El futuro no se hereda.</h2>
+        <p class="highlight">Se construye.</p>
+      </div>
+    </section>
+
+    <!-- Slide 13 con Imagen de Fondo -->
+    <section class="slide has-bg" style="background-image: url('FotosPresentacion/FOTO 6.jpg');">
+      <div class="content">
+        <div class="qr-container">
+          <div class="qr-box">
+            <p>QR con memorias (pp móvil)</p>
+          </div>
+          <div class="qr-box">
+            <p>QR redes @centrodeeventosupb</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación -->
+  <nav class="controls">
+    <button id="prev-btn">← Anterior</button>
+    <span id="slide-indicator">1 / 13</span>
+    <button id="next-btn">Siguiente →</button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>

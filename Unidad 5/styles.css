@@ -1,0 +1,215 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #080810;
+  color: #ffffff;
+}
+
+/* 1. Canvas Three.js: Capa intermedia sobre las imágenes de fondo */
+#webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5; /* Garantiza la visibilidad constante del Dodecaedro */
+  pointer-events: none;
+}
+
+/* 2. Contenedor de la aplicación */
+#app {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 6rem;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.5s ease, visibility 1.5s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* 3. Mascara de oscurecido más ligera para que la imagen sea más visible */
+.slide.has-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Sombra más clara en general, concentrando el contraste sutil en el centro-derecha para el Dodecaedro */
+  background: linear-gradient(
+    90deg, 
+    rgba(8, 8, 16, 0.65) 0%, 
+    rgba(8, 8, 16, 0.45) 45%, 
+    rgba(8, 8, 16, 0.75) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 4. Texto con sombra para mantener legibilidad sobre la imagen más clara */
+.content {
+  position: relative;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  z-index: 10;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* --- ANIMACIONES DE ENTRADA DEL TEXTO --- */
+.slide h1,
+.slide h2,
+.slide .highlight,
+.slide .tag,
+.slide .qr-container {
+  opacity: 0;
+  transform: translateX(-30px);
+  filter: blur(8px);
+  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.active h1,
+.slide.active h2 {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0px);
+  transition-delay: 0.2s;
+}
+
+.slide.active .highlight {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0px);
+  transition-delay: 0.6s;
+}
+
+.slide.active .tag,
+.slide.active .qr-container {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0px);
+  transition-delay: 1s;
+}
+
+/* Tipografía */
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 span {
+  color: #7000ff;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.highlight {
+  font-size: 1.8rem;
+  color: #00d2ff;
+  font-weight: 500;
+}
+
+.tag {
+  font-size: 1.2rem;
+  color: #d0d0e0;
+  margin-top: 1rem;
+}
+
+.qr-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.qr-box {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #00d2ff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(8, 8, 16, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* Controles de navegación */
+.controls {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(15, 15, 25, 0.85);
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#slide-indicator {
+  font-size: 0.9rem;
+  color: #8888aa;
+  font-weight: 600;
+}
