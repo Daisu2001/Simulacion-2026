@@ -194,3 +194,20 @@ Interacción signigicativa: 5
 Prototipo funcional: 5
 
 Proceso documentado: 5
+
+
+# UNidad 5
+
+Autoevaluación:
+
+Cumplimiento del encargo:  mi presentación interpreta el guion mediante una estructura dinámica y funciona en pantalla completa.
+4.5
+
+Relaciones estructurales: puedo explicar qué relaciones existen en mi sistema, qué significan y cómo organizan sus elementos.
+5
+
+Comportamiento y significado: puedo relacionar los cambios de movimiento, estructura, densidad o composición con una intención comunicativa.
+4.5
+
+Explicación y demostración: puedo presentar la propuesta funcionando, explicar mis decisiones y demostrar cómo el sistema construye sentido.
+4
