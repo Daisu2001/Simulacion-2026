@@ -1,249 +1,357 @@
-// ==========================================
-// CONFIGURACIÓN Y VARIABLES GLOBALES
-// ==========================================
+let particles = [];
+let spacing = 6.25;
+let fft;
+let song = null;
 
-let melodyAgents = [];      // Partículas del Agente Melodía (Flow Field)
-let voiceAgents = [];       // Agentes del Agente Voz (Steering + Flocking)
+// Sensibilidad y ondas Physarum
+let highCutoff = 0.10;
+let highHoldFrames = 4;
+let lastHighFrame = 0;
+let physarumWaves = [];
+let waterRipples = [];
 
-let trailBuffer;            // Canvas secundario para rastro tipo Physarum
-let flowResolution = 20;    // Escala de la rejilla para el campo de flujo
-let zOffset = 0;            // Evolución temporal del ruido Perlin
+// Control de colores (HSB)
+let currentHue = 0;
+let nextHue = null;
 
-// Parámetros modificables en tiempo real durante la interpretación
-let trailDecay = 18;        // Tasa de evaporación de la huella
-let melodySpeed = 1.8;      // Velocidad de la melodía
+// Control del estado de la tecla E (Flow Field)
+let wasEPressed = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  pixelDensity(1);
+  colorMode(HSB, 360, 100, 100, 1);
 
-  // Inicialización del buffer de evaporación (Physarum trail)
-  trailBuffer = createGraphics(width, height);
-  trailBuffer.background(11, 13, 16);
+  initGrid();
+  fft = new p5.FFT(0.8, 64);
+  setupUI();
+}
 
-  // Instanciación del Agente Melodía (Campo de Flujo de fondo)
-  for (let i = 0; i < 400; i++) {
-    melodyAgents.push(new MelodyAgent());
-  }
+function initGrid() {
+  particles = [];
+  let cols = floor(width / spacing);
+  let rows = floor(height / spacing);
+  let startX = (width - cols * spacing) / 2 + spacing / 2;
+  let startY = (height - rows * spacing) / 2 + spacing / 2;
 
-  // Instanciación del Agente Voz (Enjambre focal)
-  for (let i = 0; i < 45; i++) {
-    voiceAgents.push(new VoiceAgent(width / 2 + random(-50, 50), height / 2 + random(-50, 50)));
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      let x = startX + i * spacing;
+      let y = startY + j * spacing;
+      particles.push(new PhysarumParticle(x, y));
+    }
   }
 }
 
 function draw() {
-  // 1. Difusión / Evaporación del rastro (Linger / Physarum)
-  trailBuffer.noStroke();
-  trailBuffer.fill(11, 13, 16, trailDecay);
-  trailBuffer.rect(0, 0, width, height);
+  background(0, 0, 0, 0.3);
 
-  // Dibujar el estado acumulado de rastros en la pantalla principal
-  image(trailBuffer, 0, 0);
+  let highEnergy = 0;
 
-  // Actualización del tiempo para el campo de flujo
-  zOffset += 0.002;
+  if (song && song.isPlaying()) {
+    fft.analyze();
+    let treble = fft.getEnergy("treble");
+    let highMid = fft.getEnergy("highMid");
+    highEnergy = max(treble, highMid) / 255;
 
-  // 2. Renderizado del Agente Melodía (Guitarras)
-  for (let agent of melodyAgents) {
-    agent.followFlowField(zOffset);
-    agent.update();
-    agent.edges();
-    agent.show(trailBuffer);
+    detectHighPeak(highEnergy);
   }
 
-  // 3. Renderizado del Agente Voz (Línea vocal)
-  let target = createVector(mouseX, mouseY);
+  // Estado de la tecla E (KeyCode 69)
+  let isEPressed = keyIsDown(69);
 
-  for (let agent of voiceAgents) {
-    // Aplicar Steering Behaviors según la interacción humana
-    let steeringForce;
-    if (mouseIsPressed) {
-      steeringForce = agent.flee(target); // Clímax o dispersión al hacer clic
-    } else {
-      steeringForce = agent.arrive(target); // Atracción orgánica suave
+  // Transición cuando se presiona recién la tecla E
+  if (isEPressed && !wasEPressed) {
+    for (let p of particles) {
+      p.enterFlowField();
     }
+    const statusMsg = document.getElementById('status-message');
+    if (statusMsg) {
+      statusMsg.textContent = '🌀 Flow Field activo (E sostenida)';
+    }
+  } else if (!isEPressed && wasEPressed) {
+    const statusMsg = document.getElementById('status-message');
+    if (statusMsg) {
+      statusMsg.textContent = '↩ Retornando partículas...';
+    }
+  }
 
-    // Aplicar Flocking entre miembros del enjambre vocal
-    let flockForce = agent.flock(voiceAgents);
+  wasEPressed = isEPressed;
 
-    agent.applyForce(steeringForce.mult(1.3));
-    agent.applyForce(flockForce.mult(0.8));
+  // Actualizar ondas de Physarum
+  for (let i = physarumWaves.length - 1; i >= 0; i--) {
+    physarumWaves[i].update();
+    if (physarumWaves[i].isDead()) {
+      physarumWaves.splice(i, 1);
+    }
+  }
 
-    agent.update();
-    agent.edges();
-    agent.show(trailBuffer);
+  // Actualizar ondas de gota de agua
+  for (let i = waterRipples.length - 1; i >= 0; i--) {
+    waterRipples[i].update();
+    if (waterRipples[i].isDead()) {
+      waterRipples.splice(i, 1);
+    }
+  }
+
+  // Actualizar y dibujar partículas
+  for (let p of particles) {
+    p.update(physarumWaves, waterRipples, isEPressed);
+    p.display();
   }
 }
 
-// ==========================================
-// INTERPRETACIÓN HUMANA (TECLAS DE CONTROL)
-// ==========================================
+function detectHighPeak(level) {
+  if (level > highCutoff && lastHighFrame > highHoldFrames) {
+    if (nextHue !== null) {
+      currentHue = nextHue;
+      nextHue = null;
+    }
+
+    physarumWaves.push(new PhysarumWave(width / 2, height / 2, level, currentHue));
+    lastHighFrame = 0;
+  } else {
+    lastHighFrame++;
+  }
+}
 
 function keyPressed() {
-  // Espacio: Modifica la duración del rastro (Physarum)
-  if (key === ' ') {
-    trailDecay = trailDecay === 18 ? 4 : 18;
+  // Tecla Q: Cambiar de color en el siguiente pulso
+  if (key === 'q' || key === 'Q') {
+    nextHue = random(0, 360);
+    const statusMsg = document.getElementById('status-message');
+    if (statusMsg) {
+      statusMsg.textContent = '¡Color aleatorio en cola! Se aplicará en el próximo pulso.';
+    }
   }
 
-  // Flechas Arriba/Abajo: Ajustan la intensidad de la melodía
-  if (keyCode === UP_ARROW) {
-    melodySpeed = min(melodySpeed + 0.5, 4.5);
-  } else if (keyCode === DOWN_ARROW) {
-    melodySpeed = max(melodySpeed - 0.5, 0.5);
+  // Tecla W: Generar gota de agua
+  if (key === 'w' || key === 'W') {
+    let rx = random(width * 0.1, width * 0.9);
+    let ry = random(height * 0.1, height * 0.9);
+    waterRipples.push(new WaterRipple(rx, ry));
+    
+    const statusMsg = document.getElementById('status-message');
+    if (statusMsg) {
+      statusMsg.textContent = '💧 Gota de agua generada.';
+    }
   }
+}
+
+class PhysarumParticle {
+  constructor(x, y) {
+    this.baseX = x;
+    this.baseY = y;
+    this.pos = createVector(x, y);
+    
+    let center = createVector(width / 2, height / 2);
+    this.radialDir = p5.Vector.sub(this.pos, center).normalize();
+
+    this.angle = this.radialDir.heading();
+    this.sensorAngle = QUARTER_PI;
+    this.sensorDist = 18;
+
+    this.hue = 0;
+    this.saturation = 0;
+    this.brightness = 100;
+    this.activeFrames = 0;
+    this.size = 1.5;
+  }
+
+  // Teletransporta la partícula a un punto inicial dentro del Flow Field al presionar E
+  enterFlowField() {
+    this.pos.x = random(width);
+    this.pos.y = random(height);
+  }
+
+  update(waves, ripples, inFlowField) {
+    if (inFlowField) {
+      // Comportamiento del Flow Field mientras E esté presionada
+      let angle = noise(this.pos.x * 0.005, this.pos.y * 0.005, frameCount * 0.01) * TWO_PI * 2;
+      let flowVector = p5.Vector.fromAngle(angle).mult(3);
+      this.pos.add(flowVector);
+
+      // Reaparecer si salen del lienzo durante el flujo
+      if (this.pos.x < 0) this.pos.x = width;
+      if (this.pos.x > width) this.pos.x = 0;
+      if (this.pos.y < 0) this.pos.y = height;
+      if (this.pos.y > height) this.pos.y = 0;
+
+      this.saturation = 80;
+      this.size = 2.0;
+
+    } else {
+      // Comportamiento estándar
+      let activeWave = null;
+
+      for (let w of waves) {
+        let d = dist(this.baseX, this.baseY, w.x, w.y);
+        if (abs(d - w.radius) < w.thickness) {
+          activeWave = w;
+          break;
+        }
+      }
+
+      // Repulsión por onda de agua
+      let rippleForce = createVector(0, 0);
+      for (let r of ripples) {
+        let d = dist(this.pos.x, this.pos.y, r.x, r.y);
+        if (abs(d - r.radius) < r.thickness) {
+          let pushDir = p5.Vector.sub(this.pos, createVector(r.x, r.y)).normalize();
+          let forceMagnitude = map(abs(d - r.radius), 0, r.thickness, r.strength, 0);
+          rippleForce.add(pushDir.mult(forceMagnitude));
+        }
+      }
+
+      this.pos.add(rippleForce);
+
+      if (activeWave) {
+        this.activeFrames = 30;
+        this.hue = activeWave.hue;
+        this.saturation = 100;
+        this.brightness = 100;
+
+        let sensorLeft = this.getSensorPos(this.angle - this.sensorAngle);
+        let sensorRight = this.getSensorPos(this.angle + this.sensorAngle);
+
+        let evalLeft = noise(sensorLeft.x * 0.01, sensorLeft.y * 0.01, frameCount * 0.05);
+        let evalRight = noise(sensorRight.x * 0.01, sensorRight.y * 0.01, frameCount * 0.05);
+
+        if (evalLeft > evalRight) {
+          this.angle -= 0.15;
+        } else if (evalRight > evalLeft) {
+          this.angle += 0.15;
+        }
+
+        let moveDir = p5.Vector.fromAngle(this.angle).mult(1.8 * activeWave.intensity);
+        this.pos.add(moveDir);
+        this.size = 2.5 + activeWave.intensity * 2;
+
+      } else {
+        if (this.activeFrames > 0) {
+          this.activeFrames--;
+          this.saturation = map(this.activeFrames, 0, 30, 0, 100);
+        } else {
+          this.saturation = 0;
+          this.brightness = 100;
+        }
+
+        // Retorno elástico acelerado a la posición base
+        this.pos.x = lerp(this.pos.x, this.baseX, 0.25);
+        this.pos.y = lerp(this.pos.y, this.baseY, 0.25);
+        this.size = 1.5;
+      }
+    }
+  }
+
+  getSensorPos(angle) {
+    return p5.Vector.add(this.pos, p5.Vector.fromAngle(angle).mult(this.sensorDist));
+  }
+
+  display() {
+    noStroke();
+    fill(this.hue, this.saturation, this.brightness);
+    ellipse(this.pos.x, this.pos.y, this.size);
+  }
+}
+
+class PhysarumWave {
+  constructor(x, y, intensity, hue) {
+    this.x = x;
+    this.y = y;
+    this.radius = 0;
+    this.maxRadius = max(width, height) * 0.85;
+    this.speed = map(intensity, 0.10, 1, 10, 24);
+    this.thickness = map(intensity, 0.10, 1, 35, 80);
+    this.intensity = intensity;
+    this.hue = hue;
+  }
+
+  update() {
+    this.radius += this.speed;
+  }
+
+  isDead() {
+    return this.radius > this.maxRadius;
+  }
+}
+
+class WaterRipple {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 0;
+    this.maxRadius = 250;
+    this.speed = 7;
+    this.thickness = 35;
+    this.strength = 12;
+  }
+
+  update() {
+    this.radius += this.speed;
+  }
+
+  isDead() {
+    return this.radius > this.maxRadius;
+  }
+}
+
+function setupUI() {
+  const fileInput = document.getElementById('audio-upload');
+  const playBtn = document.getElementById('btn-play');
+  const hideBtn = document.getElementById('btn-hide');
+  const fileNameDisplay = document.getElementById('file-name');
+  const statusMsg = document.getElementById('status-message');
+  const controlsContainer = document.getElementById('controls-container');
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      userStartAudio();
+      fileNameDisplay.textContent = file.name;
+      statusMsg.textContent = 'Cargando audio...';
+      
+      if (song) song.stop();
+
+      song = loadSound(file, () => {
+        statusMsg.textContent = '¡Listo! Reproduciendo ' + file.name;
+        song.loop();
+        fft.setInput(song);
+      }, (err) => {
+        statusMsg.textContent = 'Error al cargar el archivo de audio.';
+        console.error(err);
+      });
+    }
+  });
+
+  playBtn.addEventListener('click', () => {
+    userStartAudio();
+    if (song && song.isLoaded()) {
+      if (song.isPlaying()) {
+        song.pause();
+        statusMsg.textContent = 'Pausado';
+      } else {
+        song.loop();
+        fft.setInput(song);
+        statusMsg.textContent = 'Reproduciendo audio';
+      }
+    } else {
+      statusMsg.textContent = 'Carga primero un archivo con el botón azul.';
+    }
+  });
+
+  hideBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    controlsContainer.classList.add('hidden');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (controlsContainer.classList.contains('hidden')) {
+      controlsContainer.classList.remove('hidden');
+    }
+  });
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  trailBuffer.resizeCanvas(windowWidth, windowHeight);
-  trailBuffer.background(11, 13, 16);
-}
-
-// ==========================================
-// CLASE 1: AGENTE MELODÍA (FLOW FIELD)
-// ==========================================
-
-class MelodyAgent {
-  constructor() {
-    this.pos = createVector(random(width), random(height));
-    this.vel = createVector(0, 0);
-    this.acc = createVector(0, 0);
-    this.maxSpeed = melodySpeed;
-  }
-
-  followFlowField(zTime) {
-    let xCol = floor(this.pos.x / flowResolution);
-    let yRow = floor(this.pos.y / flowResolution);
-    
-    // Ángulo calculado con ruido Perlin 2D + Tiempo
-    let angle = noise(xCol * 0.08, yRow * 0.08, zTime) * TWO_PI * 2;
-    let force = p5.Vector.fromAngle(angle);
-    force.setMag(0.12);
-    
-    this.acc.add(force);
-  }
-
-  update() {
-    this.maxSpeed = melodySpeed;
-    this.vel.add(this.acc);
-    this.vel.limit(this.maxSpeed);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
-  }
-
-  edges() {
-    if (this.pos.x > width) this.pos.x = 0;
-    if (this.pos.x < 0) this.pos.x = width;
-    if (this.pos.y > height) this.pos.y = 0;
-    if (this.pos.y < 0) this.pos.y = height;
-  }
-
-  show(buffer) {
-    buffer.stroke(110, 145, 175, 120); // Azul ceniza tenue
-    buffer.strokeWeight(1);
-    buffer.point(this.pos.x, this.pos.y);
-  }
-}
-
-// ==========================================
-// CLASE 2: AGENTE VOZ (STEERING + FLOCKING)
-// ==========================================
-
-class VoiceAgent {
-  constructor(x, y) {
-    this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D();
-    this.acc = createVector(0, 0);
-    this.maxSpeed = 3.8;
-    this.maxForce = 0.18;
-  }
-
-  applyForce(force) {
-    this.acc.add(force);
-  }
-
-  update() {
-    this.vel.add(this.acc);
-    this.vel.limit(this.maxSpeed);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
-  }
-
-  // Steering: Comportamiento Arrive
-  arrive(target) {
-    let desired = p5.Vector.sub(target, this.pos);
-    let d = desired.mag();
-    let speed = this.maxSpeed;
-
-    if (d < 120) {
-      speed = map(d, 0, 120, 0, this.maxSpeed);
-    }
-    
-    desired.setMag(speed);
-    let steer = p5.Vector.sub(desired, this.vel);
-    steer.limit(this.maxForce);
-    return steer;
-  }
-
-  // Steering: Comportamiento Flee
-  flee(target) {
-    let desired = p5.Vector.sub(target, this.pos);
-    let d = desired.mag();
-
-    if (d < 250) {
-      desired.setMag(this.maxSpeed);
-      desired.mult(-1);
-      let steer = p5.Vector.sub(desired, this.vel);
-      steer.limit(this.maxForce * 2.5);
-      return steer;
-    }
-    return createVector(0, 0);
-  }
-
-  // Flocking: Separación, Alineación y Cohesión
-  flock(agents) {
-    let perception = 50;
-    let sep = createVector(0, 0);
-    let ali = createVector(0, 0);
-    let coh = createVector(0, 0);
-    let total = 0;
-
-    for (let other of agents) {
-      let d = dist(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
-      if (other !== this && d < perception) {
-        let diff = p5.Vector.sub(this.pos, other.pos);
-        diff.div(d * d);
-        sep.add(diff);
-        ali.add(other.vel);
-        coh.add(other.pos);
-        total++;
-      }
-    }
-
-    if (total > 0) {
-      sep.div(total).setMag(this.maxSpeed).sub(this.vel).limit(this.maxForce * 1.5);
-      ali.div(total).setMag(this.maxSpeed).sub(this.vel).limit(this.maxForce);
-      coh.div(total).sub(this.pos).setMag(this.maxSpeed).sub(this.vel).limit(this.maxForce);
-    }
-
-    let steering = createVector(0, 0);
-    steering.add(sep.mult(1.5));
-    steering.add(ali.mult(1.0));
-    steering.add(coh.mult(1.0));
-    return steering;
-  }
-
-  edges() {
-    if (this.pos.x > width) this.pos.x = 0;
-    if (this.pos.x < 0) this.pos.x = width;
-    if (this.pos.y > height) this.pos.y = 0;
-    if (this.pos.y < 0) this.pos.y = height;
-  }
-
-  show(buffer) {
-    buffer.noStroke();
-    buffer.fill(240, 220, 160, 220); // Dorado pálido/cálido para la voz
-    buffer.ellipse(this.pos.x, this.pos.y, 3.5, 3.5);
-  }
+  initGrid();
 }

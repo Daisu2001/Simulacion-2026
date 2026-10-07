@@ -3,20 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linger - Instrumento Visual Web</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Carga de la librería p5.js -->
+  <title>Simulación Physarum - Onda de Agua & Physarum</title>
+  
+  <!-- Librerías p5.js y p5.sound -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+  
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
-  <!-- Controles expresivos en pantalla para la interpretación -->
-  <div id="ui-overlay">
-    <h2>Linger — Visual Instrument</h2>
-    <p><strong>[Mover Mouse]:</strong> Dirigir el Agente Voz (Seek / Arrive)</p>
-    <p><strong>[Clic Sostenido]:</strong> Dispersar Agente Voz (Flee / Tensión)</p>
-    <p><strong>[Espacio]:</strong> Cambiar tiempo de persistencia de la huella (Physarum)</p>
-    <p><strong>[Flecha Arriba/Abajo]:</strong> Modificar velocidad e intensidad de la Melodía</p>
+  <!-- Panel de Control UI -->
+  <div id="controls-container">
+    <h2>Simulación Physarum & Gota de Agua</h2>
+    <p>Presiona <strong>Q</strong> para cambiar de color y <strong>W</strong> para generar una gota de agua.</p>
+
+    <div class="control-group">
+      <label for="audio-upload" class="custom-file-upload">📁 Cargar archivo de audio</label>
+      <input type="file" id="audio-upload" accept="audio/*">
+      <span id="file-name">Ningún archivo cargado</span>
+    </div>
+
+    <div class="button-group">
+      <button id="btn-play">▶ Reproducir / Pausa</button>
+      <button id="btn-hide">👁 Ocultar Interfaz</button>
+    </div>
+
+    <div id="status-message">Modo: Esperando archivo de audio...</div>
   </div>
 
   <script src="sketch.js"></script>
