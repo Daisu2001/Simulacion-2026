@@ -211,3 +211,35 @@ Comportamiento y significado: puedo relacionar los cambios de movimiento, estruc
 
 Explicación y demostración: puedo presentar la propuesta funcionando, explicar mis decisiones y demostrar cómo el sistema construye sentido.
 4
+
+# Unidad 6#
+
+En esta unidad quería utilizar la canción linger, de The Cranberries, pero luego de pensarle un tiempo, me pareció complejo traducir sentimientos y la letra a funciones visuales para mi sistema, por lo que decidí cambiar a albass olbass, para esto mi idea principal era mucho más pequeña, quería hacer un sistema de bombillos que se prendieran en direcciones aleatrias siguiendo el algoritmo de physarum para la dirección, sin embargo la IA no me entendio, y generó el algoritmo para todos los bombillos en pantalla, generando el physarum entre todos juntos, está idea me pareció más atractiva, y decidí expandirla y trabajar sobre ella, añadiendo un flowfield como input de comportamiento y más pistas visuales.
+
+Cumplimiento del encargo: mi instrumento utiliza tecnología web, funciona en tiempo real y permite interpretar la pieza musical elegida. 5
+
+
+Comprensión y verificación: puedo explicar y defender cómo está construido el sistema, qué perciben los agentes y cómo calculan sus acciones. Puedo predecir y verificar los cambios al modificar un parámetro.
+Es correcto, sé donde están ubicados los algoritmos en el código, y el constructor de partículas así como las funciones que implementé, quizás no sea capaz de cambiarlo inmediatamente pero mirando el codigo unos minutos puedo hacerlo.  4.5
+
+Diseño e intención: puedo justificar la selección y combinación de comportamientos y relacionarlos con mi interpretación musical.
+Decidí utilizar el physarum como canvas en el momento en el que empieza la canción, su movimiento y expansión del color acompañan bien la canción en general y su inicio, el ritmo de la canción genera pulsos en el sistema, y añadí las gotas, el cambio de color y el flowfield para para diferentes segmentos de la canción en las que cambia la sensación, las gotas son para resaltar sonidos específicos en momentos específicos, mientras que ele cambio de color y flowfield son para cuando hay cambios de tono y secciones de la canción
+
+5
+
+Interpretación humana: mi score y mis controles permiten conducir el sistema en vivo y responder a su comportamiento.
+4
+
+# Unidad 7#
+
+Para esta Unidad escogí Cocacola como compañía, ese era mi baseline, partiendo de esto me encontré con la campaña de los nombres de cocacola, en la que cada botella tenía un nombre aleatorio, decidí utilizar la tipografía con colores y curvas para hacer un juego de nombres, en el que puedes construir un mapa de líneas hasta encontrar tu nombre y ver que hiciste al final.
+
+Cumplimiento del encargo: mi sistema utiliza las letras del nombre de una organización, permite jugar con ellas y funciona en tiempo real en la Web para el contexto definido.
+
+5
+Comprensión y verificación: puedo explicar y justificar el modelo, sus estados y sus reglas. Puedo predecir y verificar el efecto de modificar una regla o un parámetro.
+4
+Interacción e identidad: puedo justificar qué permiten descubrir las acciones y sus consecuencias sobre el atributo elegido, y contrastarlo con lo observado en las pruebas con otras personas.
+5
+Resolución tipográfica y experiencia de juego: la composición, el ritmo, los momentos de lectura y las respuestas perceptibles permiten explorar el sistema y sostienen su intención.
+5
