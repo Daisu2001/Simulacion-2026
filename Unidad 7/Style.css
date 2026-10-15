@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #f7f3ed;
+    font-family: Arial, sans-serif;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+#backBtn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    background-color: #E41E2B;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.4s ease, transform 0.2s ease, background-color 0.2s ease;
+    z-index: 10;
+}
+
+#mapBtn {
+    position: fixed;
+    top: 20px;
+    left: 220px;
+    padding: 12px 24px;
+    background-color: #E41E2B;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.4s ease, transform 0.2s ease, background-color 0.2s ease;
+    z-index: 10;
+}
+
+#backBtn:hover, #mapBtn:hover {
+    background-color: #b81420;
+    transform: scale(1.05);
+}
+
+#backBtn.hidden, #mapBtn.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+}
